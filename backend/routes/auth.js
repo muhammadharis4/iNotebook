@@ -4,6 +4,7 @@ const User = require('../models/User')
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bycrypt = require('bcryptjs');
+const fetchuser = require('../middleware/fetchuser')
 
 const JWT_TOKEN = "shhhhh"
 
@@ -72,9 +73,9 @@ router.post('/login', [
 
     // check whether the email exists already
 
-   const {email, password} = req.body;
+    const { email, password } = req.body;
     try {
-        let user = await User.findOne({ email }); 
+        let user = await User.findOne({ email });
 
         // If user does not exists
         if (!user) {
@@ -83,28 +84,39 @@ router.post('/login', [
 
         // else compare the password
         const passwordCompare = await bycrypt.compare(password, user.password);
-        
+
         // If password does not match
-        if(!passwordCompare){
+        if (!passwordCompare) {
             return res.status(400).json({ error: "Please try to login with correct credentials" })
         }
 
         // else Return the jsonwebtoken
 
         const payload = {
-            user:{
+            user: {
                 id: user.id
             }
         }
         const authToken = jwt.sign(payload, JWT_TOKEN);
-        res.json({"authToken": authToken})   
+        res.json({ "authToken": authToken })
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error");
+    }
+});
+
+// Route 3: Get loggedin User details using: POST "/api/auth/getuser". Login required
+router.post('/getuser', fetchuser, async (req, res) => {
+    try {
+        const userId = req.user.id
+        const user = await User.findById(userId).select("-password")
+        res.send(user)
     }
     catch (error) {
         console.error(error.message);
         res.status(500).send("Internal server error");
     }
 })
-
-// Route3: Get loggedin User details using: POST "/api/auth/getuser". Login required
 
 module.exports = router
