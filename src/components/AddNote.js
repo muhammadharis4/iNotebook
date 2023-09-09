@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import NoteContext from "../context/notes/NoteContext";
 
-const AddNote = () => {
+const AddNote = ({showAlert}) => {
   const context = useContext(NoteContext);
   const { addNote } = context;
 
@@ -17,7 +17,8 @@ const AddNote = () => {
   const submitNote = (e) => {
     e.preventDefault();
     if (!note.title || !note.description || !note.tag) {
-      alert("Title or Description or Tag cannot be blank");
+      showAlert("Please fill all the fields", "danger");
+      return;
     }
     addNote(note.title, note.description, note.tag);
     setNote({

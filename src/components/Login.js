@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({showAlert}) => {
   const email = useRef("");
   const password = useRef("");
   const navigateTo = useNavigate();
@@ -20,10 +20,11 @@ const Login = () => {
     });
     response.json().then((data) => {
       if (data.success === false) {
-        alert(data.error);
+        showAlert(data.error, "danger");
       } else {
         localStorage.setItem("token", data.authToken);
         navigateTo("/");
+        showAlert("Logged in successfully", "success");
       }
     });
   };
