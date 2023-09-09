@@ -20,12 +20,17 @@ const AddNote = () => {
       alert("Title or Description or Tag cannot be blank");
     }
     addNote(note.title, note.description, note.tag);
+    setNote({
+      title: "",
+      description: "",
+      tag: "",
+    });
   };
 
   return (
     <form onSubmit={submitNote}>
       <div className="mb-3">
-        <label className="form-label" htmlFor="text" >
+        <label className="form-label" htmlFor="text">
           Title
         </label>
         <input
@@ -34,19 +39,10 @@ const AddNote = () => {
           id="title"
           name="title"
           aria-describedby="title"
+          value={note.title}
           onChange={onChange}
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="tag">
-          Tag
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="tag"
-          name="tag"
-          onChange={onChange}
+          minLength={3}
+          required
         />
       </div>
       <div className="mb-3">
@@ -58,11 +54,31 @@ const AddNote = () => {
           className="form-control"
           id="desc"
           name="description"
+          value={note.description}
+          onChange={onChange}
+          minLength={5}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="tag">
+          Tag
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="tag"
+          name="tag"
+          value={note.tag}
           onChange={onChange}
         />
       </div>
 
-      <button type="submit" className="btn btn-outline-primary">
+      <button
+        type="submit"
+        className="btn btn-outline-primary"
+        disabled={note.title.length < 3 || note.description.length < 5}
+      >
         Add Note
       </button>
     </form>

@@ -66,19 +66,8 @@ const Modal = ({ modalRef, note, setNote }) => {
                     aria-describedby="title"
                     value={note.title}
                     onChange={onChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="tag">
-                    Tag
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="tag"
-                    name="tag"
-                    value={note.tag}
-                    onChange={onChange}
+                    minLength={3}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -91,6 +80,21 @@ const Modal = ({ modalRef, note, setNote }) => {
                     id="desc"
                     name="description"
                     value={note.description}
+                    onChange={onChange}
+                    minLength={5}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="tag">
+                    Tag
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="tag"
+                    name="tag"
+                    value={note.tag}
                     onChange={onChange}
                   />
                 </div>
