@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/auth/AuthContext";
 
 const SignUp = ({showAlert}) => {
   const name = useRef("");
@@ -7,11 +8,13 @@ const SignUp = ({showAlert}) => {
   const password = useRef("");
   const confirmPassword = useRef("");
 
+  const { setAuth } = useContext(AuthContext);
+
   const navigateTo = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/auth/createuser", {
+    const response = await fetch("/api/auth/createuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +30,10 @@ const SignUp = ({showAlert}) => {
       if (data.success === false) {
         showAlert(data.error, "danger");
       } else {
-        localStorage.setItem("token", data.authToken);
+        setAuth({
+          token: data.token,
+          user: data.user,
+        });
         navigateTo("/");
         showAlert("Account created successfully", "success");
       }

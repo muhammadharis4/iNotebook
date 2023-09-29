@@ -1,10 +1,13 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/auth/AuthContext";
 
 const Login = ({showAlert}) => {
   const email = useRef("");
   const password = useRef("");
   const navigateTo = useNavigate();
+
+  const { setAuth } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +25,10 @@ const Login = ({showAlert}) => {
       if (data.success === false) {
         showAlert(data.error, "danger");
       } else {
-        localStorage.setItem("token", data.authToken);
+        setAuth({
+          token: data.token,
+          user: data.user,
+        });
         navigateTo("/");
         showAlert("Logged in successfully", "success");
       }
