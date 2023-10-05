@@ -26,7 +26,7 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       setAuth({
-        token: localStorage.getItem("token"),
+        authToken: localStorage.getItem("token"),
         user: JSON.parse(localStorage.getItem("user")),
       });
     }
@@ -42,7 +42,7 @@ function App() {
             exact
             path="/"
             element={
-              auth ? <Home showAlert={showAlert} /> : <Navigate to="/login" />
+              auth.token ? <Home showAlert={showAlert} /> : <Navigate to="/login" />
             }
           />
           <Route exact path="/about" element={<About />} />
@@ -50,14 +50,14 @@ function App() {
             exact
             path="/login"
             element={
-              !auth ? <Login showAlert={showAlert} /> : <Navigate to="/home" />
+              !auth.token ? <Login showAlert={showAlert} /> : <Navigate to="/" />
             }
           />
           <Route
             exact
             path="/signup"
             element={
-              !auth ? <SignUp showAlert={showAlert} /> : <Navigate to="/home" />
+              !auth.token ? <SignUp showAlert={showAlert} /> : <Navigate to="/" />
             }
           />
         </Routes>

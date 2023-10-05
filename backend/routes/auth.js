@@ -22,7 +22,7 @@ router.post(
   async (req, res) => {
     // If there are errors, return Bad request and the errors
     const errors = validationResult(req);
-    
+
     if (!errors.isEmpty()) {
       console.log(errors.array());
       return res.status(400).json({ success: false, errors: errors.array() });
@@ -57,7 +57,14 @@ router.post(
       };
       const authToken = jwt.sign(data, JWT_TOKEN);
 
-      res.json({ success: true, authToken: authToken });
+      res.json({
+        success: true,
+        authToken: authToken,
+        user: {
+          name: user.name,
+          email: user.email,
+        },
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal server error");
@@ -88,12 +95,10 @@ router.post(
 
       // If user does not exists
       if (!user) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            error: "Please try to login with correct credentials",
-          });
+        return res.status(400).json({
+          success: false,
+          error: "Please try to login with correct credentials",
+        });
       }
 
       // else compare the password
@@ -101,12 +106,10 @@ router.post(
 
       // If password does not match
       if (!passwordCompare) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            error: "Please try to login with correct credentials",
-          });
+        return res.status(400).json({
+          success: false,
+          error: "Please try to login with correct credentials",
+        });
       }
 
       // else Return the jsonwebtoken
@@ -117,7 +120,11 @@ router.post(
         },
       };
       const authToken = jwt.sign(payload, JWT_TOKEN);
-      res.json({ success: true, authToken: authToken });
+      res.json({
+        success: true,
+        authToken: authToken,
+        user: { name: user.name, email: user.email },
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal server error");

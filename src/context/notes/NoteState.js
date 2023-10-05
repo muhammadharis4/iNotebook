@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import NoteContext from "./NoteContext";
+import AuthContext from "../auth/AuthContext";
 
 const NoteState = (props) => {
-  const host = "http://localhost:5000";
 
   const [notes, setNotes] = useState([]);
+  const { auth } = useContext(AuthContext);
 
   // Get all notes
 
   const getNotes = async () => {
-    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+    const response = await fetch(`/api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        "auth-token": auth.token,
       },
     });
     response.json().then((data) => {
@@ -25,11 +26,11 @@ const NoteState = (props) => {
 
   const addNote = async (title, description, tag) => {
     // API call
-    const response = await fetch(`${host}/api/notes/addnote`, {
+    const response = await fetch(`/api/notes/addnote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        "auth-token": auth.token,
       },
       body: JSON.stringify({ title, description, tag }),
     });
@@ -42,11 +43,11 @@ const NoteState = (props) => {
   // Edit a note
   const editNote = async (id, title, description, tag) => {
     // API call
-    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+    const response = await fetch(`/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        "auth-token": auth.token,
       },
       body: JSON.stringify({ title, description, tag }),
     });
@@ -70,11 +71,11 @@ const NoteState = (props) => {
   // Delete a note
   const deleteNote = async (id) => {
     // API call
-    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+    const response = await fetch(`/api/notes/deletenote/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        "auth-token": auth.token,
       },
     });
 

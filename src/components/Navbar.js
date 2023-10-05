@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/auth/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
   const navigateTo = useNavigate();
 
+  const { auth, removeAuth } = useContext(AuthContext);
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    removeAuth();
     navigateTo("/login");
   };
 
@@ -54,7 +57,7 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="d-flex">
-          {!localStorage.getItem("token") ? (
+          {!auth.token ? (
             <Link className="btn btn-outline-primary mx-1" to="/login">
               Login
             </Link>
@@ -66,9 +69,11 @@ const Navbar = () => {
               Logout
             </button>
           )}
-          <Link className="btn btn-outline-primary mx-1" to="/signup">
-            Signup
-          </Link>
+          {!auth.token && (
+            <Link className="btn btn-outline-primary mx-1" to="/signup">
+              Signup
+            </Link>
+          )}
         </div>
       </div>
     </nav>

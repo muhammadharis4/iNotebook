@@ -31,7 +31,7 @@ const SignUp = ({showAlert}) => {
         showAlert(data.error, "danger");
       } else {
         setAuth({
-          token: data.token,
+          authToken: data.token,
           user: data.user,
         });
         navigateTo("/");

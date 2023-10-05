@@ -1,10 +1,10 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthContext";
 
-const Login = ({showAlert}) => {
-  const email = useRef("");
-  const password = useRef("");
+const Login = ({ showAlert }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigateTo = useNavigate();
 
   const { setAuth } = useContext(AuthContext);
@@ -17,8 +17,8 @@ const Login = ({showAlert}) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email.current.value,
-        password: password.current.value,
+        email,
+        password,
       }),
     });
     response.json().then((data) => {
@@ -26,7 +26,7 @@ const Login = ({showAlert}) => {
         showAlert(data.error, "danger");
       } else {
         setAuth({
-          token: data.token,
+          authToken: data.authToken,
           user: data.user,
         });
         navigateTo("/");
@@ -43,7 +43,12 @@ const Login = ({showAlert}) => {
           <label htmlFor="email" className="form-label">
             Email address
           </label>
-          <input type="email" ref={email} className="form-control" id="email" />
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
@@ -51,9 +56,9 @@ const Login = ({showAlert}) => {
           </label>
           <input
             type="password"
-            ref={password}
             className="form-control"
-            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button type="submit" className="btn btn-outline-primary">

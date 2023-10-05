@@ -34,7 +34,7 @@ const Notes = () => {
 
       {notes.length === 0 && <div>No notes to display</div>}
 
-      {notes.map((note, index) => {
+      {notes.length !== 0 && notes.map((note, index) => {
         return <NoteItem note={note} key={`note # ${index}`} updateNode={updateNodeModal}/>;
       })}
     </div>
